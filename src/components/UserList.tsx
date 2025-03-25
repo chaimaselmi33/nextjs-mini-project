@@ -3,15 +3,49 @@ import React, { useState } from "react";
 import { formatBirthDate, formatExpiracyDate } from "../utils/formatDate";
 import { checkExpiration } from "@/utils/ExpiracyCheck";
 
+interface Bank {
+  cardExpire: string;
+  cardNumber: string;
+  cardType: string;
+  currency: string;
+  iban: string;
+}
+interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  maidenName: string;
+  age: number;
+  gender: string;
+  email: string;
+  phone: string;
+  username: string;
+  password: string;
+  birthDate: string;
+  image: string;
+  bloodGroup: string;
+  height: number;
+  weight: number;
+  eyeColor: string;
+  ip: string;
+  macAddress: string;
+  university: string;
+  bank: Bank;
+  ein: string;
+  ssn: string;
+  userAgent: string;
+  role: string;
+}
+
 interface UserListProps {
-  users: any[];
+  users: User[];
 }
 
 export const UserList = ({ users }: UserListProps) => {
   const [userList, setUserList] = useState(users);
   const [searchInput, setSearchInput] = useState("");
   const [dropdownVisibility, setDropdownVisibility] = useState<
-    Record<string, boolean>
+    Record<number, boolean>
   >({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +65,8 @@ export const UserList = ({ users }: UserListProps) => {
     }
   };
 
-  const handleActionBtnClick = (userId: any) => {
+  const handleActionBtnClick = (userId: number) => {
+    console.log("--------------------", typeof userId);
     setDropdownVisibility((prevState) => ({
       ...prevState,
       [userId]: !prevState[userId],
@@ -64,8 +99,8 @@ export const UserList = ({ users }: UserListProps) => {
       {userList.length > 0 ? (
         <table className="rounded-xl overflow-hidden">
           <tbody>
-            {userList.map((user: any, index: number) => (
-              <tr className="bg-white border-b border-gray-200" key={index}>
+            {userList.map((user: User) => (
+              <tr className="bg-white border-b border-gray-200" key={user.id}>
                 <td className="py-4 px-10 pl-5 flex gap-x-3">
                   <img
                     src={user.image}
@@ -132,6 +167,7 @@ export const UserList = ({ users }: UserListProps) => {
                             }
                             width={18}
                             height={18}
+                            alt="button icon"
                           />
                           {checkExpiration(user.bank.cardExpire)
                             ? "Renew"
@@ -141,7 +177,11 @@ export const UserList = ({ users }: UserListProps) => {
                     )}
 
                     <button className="text-transparent py-2 cursor-pointer">
-                      <img src="/actionIcon.svg" className="w-6 h-full" />
+                      <img
+                        src="/actionIcon.svg"
+                        className="w-6 h-full"
+                        alt="action icon"
+                      />
                     </button>
                   </div>
                 </td>
